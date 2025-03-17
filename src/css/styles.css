@@ -116,3 +116,18 @@
     transform: rotate(360deg);
   }
 }
+
+.load-more {
+  display: none;
+  background-color: #4e75ff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 10px auto;
+}
+
+.load-more:hover {
+  background-color: #6c8cff;
+}
