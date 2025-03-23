@@ -35,7 +35,7 @@ async function onSubmit(event) {
     gallery.innerHTML = '';
     loadMoreBtn.style.display = 'none'; 
     loader.style.display = 'block';
-
+console.log(loader);
     try {
         const images = await fetchImages(query, page, perPage);
 
