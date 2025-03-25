@@ -1,13 +1,14 @@
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-const gallery = document.querySelector('.gallery');
-let lightbox = new SimpleLightbox('.gallery a', {
-  captionsData: 'alt',
-  captionDelay: 250,
-});
+
+
+
 
 export async function renderGallery(images) {
+  const gallery = document.querySelector('.gallery');
+  gallery.innerHTML = '';
+
   const markup = images
     .map(
       ({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => `
@@ -26,6 +27,5 @@ export async function renderGallery(images) {
     )
     .join('');
 
-  gallery.innerHTML = markup;
-  lightbox.refresh(); 
+  gallery.insertAdjacentHTML('beforeend', markup);
 }

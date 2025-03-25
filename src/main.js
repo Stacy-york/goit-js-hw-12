@@ -2,6 +2,8 @@ import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import { fetchImages } from './js/pixabay-api';
 import { renderGallery } from './js/render-functions';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const form = document.querySelector('.form');
 const gallery = document.querySelector('.gallery');
@@ -35,7 +37,6 @@ async function onSubmit(event) {
     gallery.innerHTML = '';
     loadMoreBtn.style.display = 'none'; 
     loader.style.display = 'block';
-console.log(loader);
     try {
         const images = await fetchImages(query, page, perPage);
 
@@ -48,7 +49,11 @@ console.log(loader);
         }
 
         renderGallery(images);
-        loadMoreBtn.style.display = 'block'; 
+      loadMoreBtn.style.display = 'block'; 
+      new SimpleLightbox('.gallery a', {
+            captionsData: 'alt',
+            captionDelay: 250,
+        });
     } catch (error) {
         iziToast.error({
             title: 'Error',
@@ -64,7 +69,6 @@ async function onLoadMore() {
   loader.style.display = 'block';
   try {
     const images = await fetchImages(query, page, perPage);
-    console.log('Fetched images for next page:', images);
 
     if (images.length === 0) {
       iziToast.info({
@@ -93,26 +97,35 @@ async function onLoadMore() {
       .join('');
 
     gallery.insertAdjacentHTML('beforeend', markup); 
+
+
+    new SimpleLightbox('.gallery a', {
+            captionsData: 'alt',
+            captionDelay: 250,
+        });
+
+
     const galleryItem = gallery.querySelector('.gallery-item');
     const cardHeight = galleryItem.getBoundingClientRect().height;
     window.scrollBy({
       top: cardHeight * 2,
       behavior: 'smooth', 
     });
-    if (page * perPage >= totalHits) {
+    if (images.length < perPage) {
       iziToast.info({
         title: 'Info',
         message: "We're sorry, but you've reached the end of search results.",
       });
       loadMoreBtn.style.display = 'none'; 
-    } else {
-      renderGallery(images, gallery);  
-    }
-    lightbox.refresh(); 
-
-    console.log('Images added to gallery');
-  } catch (error) {
+    } 
     
+    
+
+  } catch (error) {
+    iziToast.error({
+      title: 'Error',
+      message: 'Failed to fetch images. Please try again later.',
+    });
   } finally {
     loader.style.display = 'none';
   }
